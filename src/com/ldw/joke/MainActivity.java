@@ -25,6 +25,7 @@ import android.widget.TextView;
 public class MainActivity extends Activity implements OnClickListener
 {
 
+	//ldw
 	// 笑话大全
 	String httpUrl = "http://apis.baidu.com/showapi_open_bus/showapi_joke/joke_pic";
 	String httpArg = "page=1";
