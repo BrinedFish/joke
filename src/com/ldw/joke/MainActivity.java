@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;  
 
 import android.R.integer;
 import android.app.Activity;
@@ -16,12 +17,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.TextView;
 
+//api 地址http://apistore.baidu.com/apiworks/servicedetail/864.html
 public class MainActivity extends Activity implements OnClickListener
 {
 
@@ -34,37 +38,33 @@ public class MainActivity extends Activity implements OnClickListener
 	// 笑话大全的apikey ce876cabe660d4db2bb0c6019f9211b3
 	public static final String TAG = "ldw ********joke";
 
-	String jsonResult = null;
+	private String jsonResult = null;
 	
 	private Button toJsonButton = null;
 	private Button fromJsonButton = null;
+	private GridView mGridView = null;
+	private PictureAdapter mPictureAdapter = null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		showTextView = (TextView) findViewById(R.id.textView1);
-		fromJsonButton = (Button) findViewById(R.id.button1);
-		toJsonButton = (Button) findViewById(R.id.button2);
-		fromJsonButton.setOnClickListener(this);
-		toJsonButton.setOnClickListener(this);
-		// 主线程请求？是否可行
-		/*String jsonResult = request(httpUrl, httpArg);
-		if (null != jsonResult)
-		{
-			Log.v(TAG, jsonResult);
-			showTextView.setText(jsonResult);
-		}
-		else
-		{
-			Log.v(TAG, "jsonResult***空");
-		}*/
+		init();
 		start();
 		
 		
 
 	}
 
+	private void init()
+	{
+		showTextView = (TextView) findViewById(R.id.textView1);
+		fromJsonButton = (Button) findViewById(R.id.button1);
+		toJsonButton = (Button) findViewById(R.id.button2);
+		fromJsonButton.setOnClickListener(this);
+		toJsonButton.setOnClickListener(this);
+		mGridView = (GridView) findViewById(R.id.gridView_pic);
+	}
 	private void start()
 	{
 		new Thread()
@@ -161,16 +161,53 @@ public class MainActivity extends Activity implements OnClickListener
 		{
 		case R.id.button1:
 			@SuppressWarnings("rawtypes")
+
+			Gson mGson = new Gson();
+			//List<JokePicture> mList = new ArrayList<JokePicture>();
+			
+			Log.i(TAG, jsonResult);
+			if (!TextUtils.isEmpty(jsonResult))
+			{
+				//JokePicture mJokePicture = mGson.fromJson(jsonResult, JokePicture.class);
+				
+				//Log.i(TAG, mJokePicture.toString());
+				//List<JokePicture> mList = mGson.fromJson(jsonResult, new TypeToken<List<JokePicture>>(){}.getType());
+				//Log.i(TAG, "mList 长度" + mList.size());
+				
+				//List<JsonBean> mList = mGson.fromJson(jsonResult, new TypeToken<List<JsonBean>>(){}.getType());
+				//Log.i(TAG, "mList 长度" + mList.size());
+				//JsonBean mJsonBean = mGson.fromJson(jsonResult, JsonBean.class);
+				//Log.i(TAG, "showapi_res_code = " + mJsonBean.showapi_res_code);
+				//Log.i(TAG, "JsonBean.Body.allNum = " + JsonBean.Body.allNum );
+				JokePicture mJokePicture = mGson.fromJson(jsonResult, JokePicture.class);
+				Log.i(TAG, "showapi_res_code = " + mJokePicture.getShowapi_res_code());
+				Log.i(TAG, "mJokePicture.getShowapi_res_body().getAllNum() = " + mJokePicture.getShowapi_res_body().getAllNum());
+				List<Contentlist> list = mJokePicture.getShowapi_res_body().getContentlist();
+				for (int i = 0; i < list.size(); i++)
+				{
+					Contentlist mContentlist = list.get(i);
+					String title = mContentlist.getTitle();
+					String time = mContentlist.getCt();
+					String imgUrl = mContentlist.getImg();
+					Log.i(TAG, "title = " + title);
+				}
+				if (list.size() > 0)
+				{
+					mPictureAdapter = new PictureAdapter(this, list);
+					//mGridView.setNumColumns(list.size());
+					mGridView.setAdapter(mPictureAdapter);
+				}
+				
+			}
+			
+			break;
+		case R.id.button2:
 			List testList = new ArrayList(); 
-
 			testList.add("first"); 
-
 			testList.add("second"); 
 			Gson gson = new Gson();
 			String listToJson = gson.toJson(testList); 
 			Log.v(TAG, listToJson);
-			break;
-		case R.id.button2:
 			
 			break;
 		default:
