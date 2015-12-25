@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;  
+import com.ldw.joke.parsexml.ParseXstream;
 
 import android.R.integer;
 import android.app.Activity;
@@ -42,6 +43,8 @@ public class MainActivity extends Activity implements OnClickListener
 	
 	private Button toJsonButton = null;
 	private Button fromJsonButton = null;
+	private Button toXMLButton = null;
+	private Button fromXMLButton = null;
 	private GridView mGridView = null;
 	private PictureAdapter mPictureAdapter = null;
 	@Override
@@ -63,6 +66,10 @@ public class MainActivity extends Activity implements OnClickListener
 		toJsonButton = (Button) findViewById(R.id.button2);
 		fromJsonButton.setOnClickListener(this);
 		toJsonButton.setOnClickListener(this);
+		fromXMLButton = (Button) findViewById(R.id.button_fromxml);
+		fromXMLButton.setOnClickListener(this);
+		toXMLButton = (Button) findViewById(R.id.button_toxml);
+		toXMLButton.setOnClickListener(this);
 		mGridView = (GridView) findViewById(R.id.gridView_pic);
 	}
 	private void start()
@@ -183,18 +190,19 @@ public class MainActivity extends Activity implements OnClickListener
 				Log.i(TAG, "showapi_res_code = " + mJokePicture.getShowapi_res_code());
 				Log.i(TAG, "mJokePicture.getShowapi_res_body().getAllNum() = " + mJokePicture.getShowapi_res_body().getAllNum());
 				List<Contentlist> list = mJokePicture.getShowapi_res_body().getContentlist();
-				for (int i = 0; i < list.size(); i++)
+				/*for (int i = 0; i < list.size(); i++)
 				{
 					Contentlist mContentlist = list.get(i);
 					String title = mContentlist.getTitle();
 					String time = mContentlist.getCt();
 					String imgUrl = mContentlist.getImg();
-					Log.i(TAG, "title = " + title);
-				}
+					//Log.i(TAG, "title = " + title);
+				}*/
 				if (list.size() > 0)
 				{
 					mPictureAdapter = new PictureAdapter(this, list);
 					//mGridView.setNumColumns(list.size());
+					//mGridView.setVerticalSpacing(100);
 					mGridView.setAdapter(mPictureAdapter);
 				}
 				
@@ -209,6 +217,14 @@ public class MainActivity extends Activity implements OnClickListener
 			String listToJson = gson.toJson(testList); 
 			Log.v(TAG, listToJson);
 			
+			break;
+		case R.id.button_fromxml:
+			ParseXstream mFromParseXstream = new ParseXstream(this);
+			mFromParseXstream.parseXmlToJava();
+			break;
+		case R.id.button_toxml:
+			ParseXstream mParseXstream = new ParseXstream(this);
+			mParseXstream.parseJavaToXml();
 			break;
 		default:
 			break;

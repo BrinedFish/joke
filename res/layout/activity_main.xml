@@ -24,7 +24,7 @@
             <GridView
                 android:id="@+id/gridView_pic"
                 android:layout_width="wrap_content"
-                android:layout_height="1100dp"
+                android:layout_height="1300dp"
                 android:numColumns="2" >
             </GridView>
 
@@ -33,13 +33,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/textView1"
-                android:text="FromJson" />
+                android:text="FromJson加显示网络图片" />
 
             <Button
                 android:id="@+id/button2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="ToJson" />
+
+            <Button
+                android:id="@+id/button_fromxml"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="FromXML" />
+
+            <Button
+                android:id="@+id/button_toxml"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ToXML" />
         </LinearLayout>
     </org.kymjs.kjframe.widget.KJScrollView>
 
